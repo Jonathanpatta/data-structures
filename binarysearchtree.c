@@ -5,6 +5,58 @@ struct node
     int data;
     struct node*left,*right;
 };
+//------------------------------------------queue implementation---------------------------------------------------------------------------------
+int MAX=100;
+struct node* queue[100];
+int front=-1,rear=-1;
+void enqueue(struct node* data)
+{
+    if(rear==MAX-1)
+    {
+        printf("full");
+    }
+    else
+    {
+        if(front==-1)
+            front=0;
+        rear++;
+        queue[rear]=data;//printf("done\n");
+    }
+}
+int dequeue()
+{
+    struct node* t;
+    if(front==-1||rear<front)
+    {
+        //printf("empty\n");
+        rear=front=-1;
+        t=NULL;
+        return(t);
+    }
+    else
+    {
+        if(front==rear+1)
+        {
+            t=queue[front];
+            front=rear=-1;
+            return(t);
+        }
+        else
+        {
+            t=queue[front];
+            front++;
+            return(t);
+        }
+    }
+}
+bool empty()
+{
+    if(front==-1||front>rear)
+        return true;
+    else
+        return false;
+}
+//--------------------------------------------queue implementation--------------------------------------------------------------------------------
 struct node* create_node(int data1)
 {
     struct node *nod;
@@ -163,6 +215,23 @@ struct node* delete_node(struct node *root,int data)
         return(root);
     }
 }
+void levelorder(struct node* root)
+{
+    if(root==NULL)
+        return;
+
+    enqueue(root);
+    while(!empty())
+    {
+        struct node* current=queue[front];
+        printf("%d ",current->data);
+        if(current->left!=NULL)
+            enqueue(current->left);
+        if(current->right!=NULL)
+            enqueue(current->right);
+        dequeue();
+    }
+}
 int main()
 {
     bool l;
@@ -180,5 +249,6 @@ int main()
     postorder(start);printf("\n");
     preorder(start);printf("\n");
     inorder(start);printf("\n");
+    levelorder(start);
     return(0);
 }
